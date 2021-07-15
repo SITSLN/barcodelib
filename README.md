@@ -4,6 +4,13 @@
  
 This library was designed to give an easy class for developers to use when they need to generate barcode images from a string of data.
 
+### SITSLN Changes ###
+
+To Support .NET 4.5.2 Framework Environment, we downgraded the target framework to .Net 4.5.2. The major changes to support the .Net4.5.2 is as follows
+- Replaced "System.Text.Json" to "Newtonsoft.Json". 
+- Removed "System.Drawing.Common" Version="5.0.2".
+- Included "System.ValueTuple" Version="4.5.0".
+
 |   Supported   |  Symbology    | List  |
 | :------------- | :------------- | :-----|
 | Code 128      | Code 93       | Code 39 (Extended / Full ASCII) |

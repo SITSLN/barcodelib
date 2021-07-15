@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 using System.Security;
 using System.Xml;
 using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 /* 
  * ***************************************************
@@ -1087,7 +1087,10 @@ namespace BarcodeLib
         }
         public string ToJSON(Boolean includeImage = true)
         {
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(GetSaveData(includeImage));
+            //byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(GetSaveData(includeImage));
+            String str = JsonConvert.SerializeObject(GetSaveData(includeImage));
+            byte[] bytes = Encoding.UTF8.GetBytes(str);
+
             return (new UTF8Encoding(false)).GetString(bytes); //no BOM
         }
 
@@ -1121,14 +1124,23 @@ namespace BarcodeLib
             {
                 if (jsonStream is MemoryStream)
                 {
-                    return JsonSerializer.Deserialize<SaveData>(((MemoryStream)jsonStream).ToArray());
+                    //return JsonSerializer.Deserialize<SaveData>(((MemoryStream)jsonStream).ToArray());
+                    JsonSerializer serializer = new JsonSerializer();
+                    StreamReader sr = new StreamReader(jsonStream);
+                    JsonReader reader = new JsonTextReader(sr);
+                    return serializer.Deserialize<SaveData>(reader);
                 } 
                 else
                 {
                     using (var memoryStream = new MemoryStream())
                     {
                         jsonStream.CopyTo(memoryStream);
-                        return JsonSerializer.Deserialize<SaveData>(memoryStream.ToArray());
+                        //return JsonSerializer.Deserialize<SaveData>(memoryStream.ToArray());
+
+                        JsonSerializer serializer = new JsonSerializer();
+                        StreamReader sr = new StreamReader(memoryStream);
+                        JsonReader reader = new JsonTextReader(sr);
+                        return serializer.Deserialize<SaveData>(reader);
                     }
                 }
                 
